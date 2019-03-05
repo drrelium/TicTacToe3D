@@ -1,0 +1,140 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:skia="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms"
+             xmlns:local="clr-namespace:TicTacToe3D"
+             x:Class="TicTacToe3D.MainPage">
+
+ <!--   <skia:SKCanvasView PaintSurface="OnCanvasViewPaintSurface" />  -->
+
+    <StackLayout x:Name="Panel"
+        Spacing="0">
+        
+        <Grid>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Label x:Name="Prompt" 
+                   Text="Please select a ring size."
+                   FontSize="12"
+                   VerticalTextAlignment="Center"
+                   HorizontalTextAlignment="Center"
+                   IsVisible="False"
+                   Grid.Column="0" Grid.Row="0"/>
+
+            <Picker x:Name="PlayerAmount"
+                    Title="How many players are there?" 
+                    FontSize="12"
+                   VerticalOptions="Center"
+                   HorizontalOptions="Center"
+                   IsVisible="True"
+                    BackgroundColor="Red" Grid.Column="0" Grid.Row="0">
+            </Picker>
+        </Grid>
+
+        <ListView x:Name="BoardView" HasUnevenRows="False" ItemsSource="{Binding Rings}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Grid BackgroundColor="Black" Padding="5,5,5,5">
+                            <skia:SKCanvasView PaintSurface="OnCanvasViewPaintSurface">
+                                <skia:SKCanvasView.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnCanvasViewTapped" />
+                                </skia:SKCanvasView.GestureRecognizers>
+                            </skia:SKCanvasView>
+                            <BoxView x:Name="BoxOne" BackgroundColor="White" HorizontalOptions="FillAndExpand"  VerticalOptions="FillAndExpand" 
+                                     HeightRequest="{Binding Width, Source={x:Reference BoxOne}}"/>
+                        </Grid>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+
+        <!--
+        <Grid x:Name="Board"
+            BackgroundColor="Black"
+            Padding="5,5,5,5" >
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="3*"/>
+            </Grid.ColumnDefinitions>
+
+            <BoxView x:Name="BoxOne" BackgroundColor="White" HorizontalOptions="FillAndExpand"  VerticalOptions="FillAndExpand" Grid.Column="0" Grid.Row="0"
+                HeightRequest="{Binding Width, Source={x:Reference BoxOne}}">
+            </BoxView>
+            <BoxView x:Name="BoxTwo" BackgroundColor="White" HorizontalOptions="FillAndExpand"  VerticalOptions="FillAndExpand" Grid.Column="1" Grid.Row="0"/>
+            <BoxView BackgroundColor="White" x:Name="BoxThree" HorizontalOptions="FillAndExpand"  VerticalOptions="FillAndExpand" Grid.Column="2" Grid.Row="0" />
+            <BoxView BackgroundColor="White" x:Name="BoxFour" HorizontalOptions="FillAndExpand"  VerticalOptions="FillAndExpand" Grid.Column="0" Grid.Row="1"
+                      HeightRequest="{Binding Width, Source={x:Reference BoxOne}}"/>
+            <BoxView BackgroundColor="White" x:Name="BoxFive" HorizontalOptions="FillAndExpand"  VerticalOptions="FillAndExpand" Grid.Column="1" Grid.Row="1" />
+            <BoxView BackgroundColor="White" x:Name="BoxSix" HorizontalOptions="FillAndExpand"  VerticalOptions="FillAndExpand" Grid.Column="2" Grid.Row="1" />
+            <BoxView BackgroundColor="White" x:Name="BoxSeven" HorizontalOptions="FillAndExpand"  VerticalOptions="FillAndExpand" Grid.Column="0" Grid.Row="2"
+                      HeightRequest="{Binding Width, Source={x:Reference BoxOne}}"/>
+            <BoxView BackgroundColor="White" x:Name="BoxEight" HorizontalOptions="FillAndExpand"  VerticalOptions="FillAndExpand" Grid.Column="1" Grid.Row="2" />
+            <BoxView BackgroundColor="White" x:Name="BoxNine" HorizontalOptions="FillAndExpand"  VerticalOptions="FillAndExpand" Grid.Column="2" Grid.Row="2" />
+        </Grid>
+-->
+
+
+        
+        <Grid x:Name="RingBoard"
+            BackgroundColor="Purple"
+            Padding="5,5,5,5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="3*"/>
+            </Grid.ColumnDefinitions>
+
+            <BoxView BackgroundColor="White" x:Name="SmallRing" HorizontalOptions="FillAndExpand"  VerticalOptions="FillAndExpand" 
+                     HeightRequest="{Binding Width, Source={x:Reference SmallRing}}" Grid.Column="0" Grid.Row="0"/>
+            <BoxView BackgroundColor="White" x:Name="MediumRing" HorizontalOptions="FillAndExpand"  VerticalOptions="FillAndExpand" Grid.Column="1" Grid.Row="0" />
+            <BoxView BackgroundColor="White" x:Name="LargeRing" HorizontalOptions="FillAndExpand"  VerticalOptions="FillAndExpand" Grid.Column="2" Grid.Row="0" />
+        </Grid>
+
+        
+
+        <!--
+        <Button x:Name="Small" Clicked="Small_Tapped" BackgroundColor="Transparent"
+                BorderColor="Black" BorderWidth="5" 
+                Grid.Column="0" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+           
+
+        </Button>
+
+        <Button x:Name="Medium" Click="Medium_Tapped" Background="Transparent"
+                BorderBrush="Black" BorderThickness="5" Margin="-5,0,-5,0" 
+                Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+            <Ellipse Width="48" Height="48" Grid.Column="1" Fill="Transparent"
+                             StrokeThickness="10" Stroke="SteelBlue"/>
+        </Button>
+
+        <Button x:Name="Large" Click="Large_Tapped" Background="Transparent" 
+                BorderBrush="Black" BorderThickness="5" 
+                Grid.Column="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+            <Ellipse Width="80" Height="80" Grid.Column="2" Fill="Transparent" VerticalAlignment="Center"
+                             StrokeThickness="10" Stroke="SteelBlue" HorizontalAlignment="Center" Margin="0,0,0,0"/>
+        </Button>
+-->
+            
+    
+
+    </StackLayout>
+
+</ContentPage>
