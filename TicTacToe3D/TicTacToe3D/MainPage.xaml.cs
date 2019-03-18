@@ -3,48 +3,75 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 using Xamarin.Forms;
 using SkiaSharp;
 using SkiaSharp.Views.Forms;
 using System.Collections.ObjectModel;
+
 
 namespace TicTacToe3D
 {
     public partial class MainPage : ContentPage
     {
 
-        ObservableCollection<Ring> Rings;
+        ObservableCollection<CanvasRings> CanvasList;
+
         float LargeRingSize;
         float MediumRingSize;
         float SmallRingSize;
+        SKColor PlayerOne = Color.Blue.ToSKColor();
 
         public MainPage()
         {
             InitializeComponent();
             NewGame();
 
+            var tapGestureRecognizer = new TapGestureRecognizer();
+            tapGestureRecognizer.Tapped += (s, e) => {
+      //          Grid mainBoard = (Grid)s;
+                var item = Grid.GetRow((Grid)s);
+                Debug.WriteLine("Entered Tap Action.");
+                Debug.WriteLine("Row is: " + item);
+
+
+            };
+            //    image.GestureRecognizers.Add(tapGestureRecognizer);
+            Board.GestureRecognizers.Add(tapGestureRecognizer);    
+
             SKCanvasView canvasView = new SKCanvasView();
             canvasView.PaintSurface += OnCanvasViewPaintSurface;
-      //      Board.Children.Add(canvasView, 1, 1);
+
+            Board.Children.Add(canvasView, 0, 1);
+     //       canvasView.GestureRecognizers.Add(tapGestureRecognizer);
         }   
 
         void OnCanvasViewPaintSurface(object sender, SKPaintSurfaceEventArgs args)
         {
+
+            Debug.WriteLine("Entered OnCanvasViewPaintSurface.");
             SKImageInfo info = args.Info;
             SKSurface surface = args.Surface;
             SKCanvas canvas = surface.Canvas;
 
-            SKPaint Ring = new SKPaint
+            SKPaint LargeRing = new SKPaint
             {
                 Style = SKPaintStyle.Stroke,
-                Color = Color.Blue.ToSKColor(),
+                Color = PlayerOne,
+                StrokeWidth = (float)(info.Width * 0.10)
+            };
+
+            SKPaint MediumRing = new SKPaint
+            {
+                Style = SKPaintStyle.Stroke,
+                Color = PlayerOne,
                 StrokeWidth = (float)(info.Width * 0.10)
             };
 
             SKPaint SmallRing = new SKPaint
             {
                 Style = SKPaintStyle.StrokeAndFill,
-                Color = Color.Blue.ToSKColor(),
+                Color = PlayerOne,
                 StrokeWidth = (float)(info.Width * 0.10)
              };
 
@@ -52,34 +79,48 @@ namespace TicTacToe3D
             float MediumRingSize = (float)(info.Width * 0.45);
             float SmallRingSize = (float)(info.Width * 0.10);
 
-            canvas.DrawCircle(info.Width / 2, info.Height / 2, LargeRingSize / 2, Ring);
-            canvas.DrawCircle(info.Width / 2, info.Height / 2, MediumRingSize / 2, Ring);
+            canvas.DrawCircle(info.Width / 2, info.Height / 2, LargeRingSize / 2, LargeRing);
+            canvas.DrawCircle(info.Width / 2, info.Height / 2, MediumRingSize / 2, MediumRing);
             canvas.DrawCircle(info.Width / 2, info.Height / 2, SmallRingSize / 2, SmallRing);
 
         }
+/*
+        void OnCanvasViewTapped(object sender, EventArgs args)
+        {
+            Debug.WriteLine("Entered OnCanvasViewTapped.");
 
+            (sender as SKCanvasView).InvalidateSurface();
+        }
+*/
         public void NewGame()
         {
-            Rings = new ObservableCollection<Ring>();
-            int NumberOfColumns = 9;
+            CanvasList = new ObservableCollection<CanvasRings>();
+            int NumberOfCanvases = 9;
 
-            for (int x = 0; x < NumberOfColumns; x++)
+            for (int x = 0; x < NumberOfCanvases; x++)
             {
-                Rings.Add(new Ring
+                CanvasList.Add(new CanvasRings
                 {
-                    
+                    SmallVisible = 0,
+                    SmallColor = PlayerOne,
+                    MediumVisible = 0,
+                    MediumColor = PlayerOne,
+                    LargeVisible = 0,
+                    LargeColor = PlayerOne,
                 });
             }
-        
         }
-
     }
 
-    public class Ring
+    // For Visiblity an Alpha value of 0 is fully transparnt, and an alpha value of 0xFF is fully opaque.  
+    public class CanvasRings
     {
-        public float Size { get; set; }
-        public SKColor Color { get; set; }
-        public Boolean Visible { get; set; }
+        public int SmallVisible { get; set; }
+        public SKColor SmallColor { get; set; }
+        public int MediumVisible { get; set; }
+        public SKColor MediumColor { get; set; }
+        public int LargeVisible { get; set; }
+        public SKColor LargeColor { get; set; }
     }
 
 }
