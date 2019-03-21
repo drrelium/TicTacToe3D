@@ -16,16 +16,23 @@ namespace TicTacToe3D
     {
 
         ObservableCollection<CanvasRings> CanvasList;
+        ObservableCollection<CanvasRings> RingList;
 
         float LargeRingSize;
         float MediumRingSize;
         float SmallRingSize;
-        SKColor PlayerOne = Color.Blue.ToSKColor();
+
+        SKColor currentPlayerColor;
 
         public MainPage()
         {
             InitializeComponent();
+
+            SKColor PlayerOneColor = Color.Blue.ToSKColor();
+            currentPlayerColor = PlayerOneColor;
+
             NewGame();
+            RingSelection();
 
             var tapGestureRecognizer = new TapGestureRecognizer();
             tapGestureRecognizer.Tapped += (s, e) => {
@@ -36,13 +43,12 @@ namespace TicTacToe3D
 
 
             };
-            //    image.GestureRecognizers.Add(tapGestureRecognizer);
-            Board.GestureRecognizers.Add(tapGestureRecognizer);    
+     //       Board.GestureRecognizers.Add(tapGestureRecognizer);    
 
-            SKCanvasView canvasView = new SKCanvasView();
-            canvasView.PaintSurface += OnCanvasViewPaintSurface;
+     //       SKCanvasView canvasView = new SKCanvasView();
+     //       canvasView.PaintSurface += OnCanvasViewPaintSurface;
 
-            Board.Children.Add(canvasView, 0, 1);
+   //         Board.Children.Add(canvasView, 0, 1);
      //       canvasView.GestureRecognizers.Add(tapGestureRecognizer);
         }   
 
@@ -54,24 +60,26 @@ namespace TicTacToe3D
             SKSurface surface = args.Surface;
             SKCanvas canvas = surface.Canvas;
 
+            
+
             SKPaint LargeRing = new SKPaint
             {
                 Style = SKPaintStyle.Stroke,
-                Color = PlayerOne,
+                Color = currentPlayerColor,
                 StrokeWidth = (float)(info.Width * 0.10)
             };
 
             SKPaint MediumRing = new SKPaint
             {
                 Style = SKPaintStyle.Stroke,
-                Color = PlayerOne,
+                Color = currentPlayerColor,
                 StrokeWidth = (float)(info.Width * 0.10)
             };
 
             SKPaint SmallRing = new SKPaint
             {
                 Style = SKPaintStyle.StrokeAndFill,
-                Color = PlayerOne,
+                Color = currentPlayerColor,
                 StrokeWidth = (float)(info.Width * 0.10)
              };
 
@@ -82,16 +90,22 @@ namespace TicTacToe3D
             canvas.DrawCircle(info.Width / 2, info.Height / 2, LargeRingSize / 2, LargeRing);
             canvas.DrawCircle(info.Width / 2, info.Height / 2, MediumRingSize / 2, MediumRing);
             canvas.DrawCircle(info.Width / 2, info.Height / 2, SmallRingSize / 2, SmallRing);
-
+            
         }
-/*
-        void OnCanvasViewTapped(object sender, EventArgs args)
-        {
-            Debug.WriteLine("Entered OnCanvasViewTapped.");
+        /*
+                void OnCanvasViewTapped(object sender, EventArgs args)
+                {
+                    Debug.WriteLine("Entered OnCanvasViewTapped.");
 
-            (sender as SKCanvasView).InvalidateSurface();
-        }
+                    (sender as SKCanvasView).InvalidateSurface();
+                }
 */
+        void OnTouch(object sender, SKTouchEventArgs e)
+        {
+            Debug.WriteLine("Entered OnTouch.");
+
+        }
+
         public void NewGame()
         {
             CanvasList = new ObservableCollection<CanvasRings>();
@@ -102,14 +116,63 @@ namespace TicTacToe3D
                 CanvasList.Add(new CanvasRings
                 {
                     SmallVisible = 0,
-                    SmallColor = PlayerOne,
+                    SmallColor = currentPlayerColor,
                     MediumVisible = 0,
-                    MediumColor = PlayerOne,
+                    MediumColor = currentPlayerColor,
                     LargeVisible = 0,
-                    LargeColor = PlayerOne,
+                    LargeColor = currentPlayerColor,
                 });
             }
+            BindableLayout.SetItemsSource(flexBoard, CanvasList);
         }
+
+        public void RingSelection()
+        {
+            SKCanvasView canvasView = new SKCanvasView();
+            RingList = new ObservableCollection<CanvasRings>();
+
+            RingList.Add(new CanvasRings
+            {
+                SmallVisible = 0,
+                SmallColor = currentPlayerColor,
+                MediumVisible = 0,
+                MediumColor = currentPlayerColor,
+                LargeVisible = 0,
+                LargeColor = currentPlayerColor,
+            });
+
+            RingList.Add(new CanvasRings
+            {
+                SmallVisible = 0,
+                SmallColor = currentPlayerColor,
+                MediumVisible = 0,
+                MediumColor = currentPlayerColor,
+                LargeVisible = 0,
+                LargeColor = currentPlayerColor,
+            });
+
+            RingList.Add(new CanvasRings
+            {
+                SmallVisible = 0,
+                SmallColor = currentPlayerColor,
+                MediumVisible = 0,
+                MediumColor = currentPlayerColor,
+                LargeVisible = 0,
+                LargeColor = currentPlayerColor,
+            });
+
+            BindableLayout.SetItemsSource(MessagesListView, RingList);
+
+
+            SKPaint LargeRing = new SKPaint
+            {
+                Style = SKPaintStyle.Stroke,
+                Color = Color.Black.ToSKColor(),
+                StrokeWidth = (float)(canvasView.Width * 0.10)
+            };
+
+        }
+
     }
 
     // For Visiblity an Alpha value of 0 is fully transparnt, and an alpha value of 0xFF is fully opaque.  
