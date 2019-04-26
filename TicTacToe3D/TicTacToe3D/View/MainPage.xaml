@@ -9,32 +9,6 @@
     <StackLayout x:Name="Panel"
         Spacing="0">
         
-        <Grid>
-
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-
-            <Label x:Name="Prompt" 
-                   Text="Please select a ring size."
-                   FontSize="12"
-                   VerticalTextAlignment="Center"
-                   HorizontalTextAlignment="Center"
-                   IsVisible="False"
-                   Grid.Column="0" Grid.Row="0"/>
-
-            <Picker x:Name="PlayerAmount"
-                    Title="How many players are there?" 
-                    FontSize="12"
-                   VerticalOptions="Center"
-                   HorizontalOptions="Center"
-                   IsVisible="True"
-                    BackgroundColor="Red" Grid.Column="0" Grid.Row="0">
-            </Picker>
-        </Grid>
 
 
         <Grid BackgroundColor="Black">
@@ -68,10 +42,10 @@
         </Grid>
 
 
-        <Grid BackgroundColor="Brown">
+        <Grid BackgroundColor="Blue" ColumnSpacing="0" RowSpacing="0">
 
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
             <FlexLayout x:Name="MessagesListView"
@@ -82,24 +56,61 @@
                         BindableLayout.ItemsSource="{Binding RingList}">
                 <BindableLayout.ItemTemplate>
                     <DataTemplate>
-                        <StackLayout>
-                            <skia:SKCanvasView x:Name="RingSelectionCanvas" 
-                                PaintSurface="OnCanvasViewPaintSurface"
-                                EnableTouchEvents="True" 
-                                Touch="OnTouch"
-                                BackgroundColor="Tan"
-                                HeightRequest="{Binding Width, Source={x:Reference RingSelectionCanvas}}" 
+                        <Grid BackgroundColor="Aqua" ColumnSpacing="0" RowSpacing="0">
+
+
+                            <Label x:Name="ButtonLabel"  Text="{Binding Location}"/>
+
+
+                            <Button x:Name="RingSize"
+                                BackgroundColor="Green"
+                                Margin="5,5,5,5"
                                 WidthRequest="75"
-                                Margin="5,5,5,5">
-                            </skia:SKCanvasView>
-                        </StackLayout>
+                                HeightRequest="{Binding Width, Source={x:Reference RingSize}}" 
+                                Command="{Binding Path=BindingContext.RingSelectionCommand, Source={x:Reference Name=MainPage}}"
+                                CommandParameter="{Binding Location }">
+
+
+                            </Button>
+                            
+                            
+
+
+
+                        </Grid>
                     </DataTemplate>
                 </BindableLayout.ItemTemplate>
             </FlexLayout>
         </Grid>
-      
 
-    
+
+        <Grid>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Label x:Name="Prompt" 
+                   Text="Please select a ring size."
+                   FontSize="12"
+                   VerticalTextAlignment="Center"
+                   HorizontalTextAlignment="Center"
+                   IsVisible="False"
+                   Grid.Column="0" Grid.Row="0"/>
+
+            <Picker x:Name="PlayerAmount"
+                    Title="How many players are there?" 
+                    FontSize="12"
+                   VerticalOptions="Center"
+                   HorizontalOptions="Center"
+                   IsVisible="True"
+                    BackgroundColor="Red" Grid.Column="0" Grid.Row="0">
+            </Picker>
+        </Grid>
+
 
     </StackLayout>
 
