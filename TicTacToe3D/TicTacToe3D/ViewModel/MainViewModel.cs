@@ -14,33 +14,57 @@ namespace TicTacToe3D
     {
 
         public ICommand RingSelectionCommand{ set; get; }
-        public ObservableCollection<CanvasRings> RingList { get; set; }
-        public ObservableCollection<CanvasRings> CanvasList { get; set; }
+        public ICommand PaintCommand { get; set; }
+        public ObservableCollection<CanvasRing> RingList { get; set; }
+        public ObservableCollection<CanvasRing> CanvasList { get; set; }
         public int BoardWidth = 3;
 
         public MainViewModel()
         {
-            CanvasList = new ObservableCollection<CanvasRings>();
-            RingList = new ObservableCollection<CanvasRings>();
+            CanvasList = new ObservableCollection<CanvasRing>();
+            RingList = new ObservableCollection<CanvasRing>();
             NewList(CanvasList, BoardWidth * BoardWidth);
             NewList(RingList, BoardWidth);
 
-
-  //          RingSelection();
-            RingSelectionCommand = new Command<string>(UpdateRing);
+            RingSelectionCommand = new Command<object>(UpdateRing);
+            PaintCommand = new Command<SKPaintSurfaceEventArgs>(OnPainting);
         }
 
-        public void UpdateRing(string location)
+        public void UpdateRing(object o)
         {
-                        Debug.WriteLine("Clicked location " + location);
+            var item = (o as CanvasRing);
+            int location = item.Location;
+            //         Debug.WriteLine("Clicked location " + location.ToString());
+        }
+
+        private void OnPainting(SKPaintSurfaceEventArgs e)
+        {
+            Debug.WriteLine("Entered OnPainting in MV");
+            SKImageInfo info = e.Info;
+            SKSurface surface = e.Surface;
+            SKCanvas canvas = surface.Canvas;
+
+            SKPaint LargeRing = new SKPaint
+            {
+                Style = SKPaintStyle.Stroke,
+
+                //       Color = currentPlayerColor.WithAlpha(CanvasRings.LargeVisible),
+                StrokeWidth = (float)(info.Width * 0.10)
+            };
+
+            float LargeRingSize = (float)(info.Width * 0.80);
+
+            canvas.DrawCircle(info.Width / 2, info.Height / 2, LargeRingSize / 2, LargeRing);
+
+
 
         }
 
-        public void NewList(ObservableCollection<CanvasRings> list, int size) 
+        public void NewList(ObservableCollection<CanvasRing> list, int size) 
         {
             for (int x = 0; x < size; x++)
             {
-                list.Add(new CanvasRings
+                list.Add(new CanvasRing
                 {
                     SmallColor = Color.Transparent.ToSKColor(),
                     MediumColor = Color.Transparent.ToSKColor(),
@@ -72,25 +96,5 @@ public byte SmallVisible
             }
         }
         #endregion
-
-       
-        #region UI methods
-        public void UpdateRing(MainViewModel box)
-        {
-            Debug.WriteLine("Entered UpdateRing for " + box.SmallColor.ToString());
-            //       RingList[Location].SmallColor = Color.Yellow.ToSKColor();
-        //     SKCanvasView view = MainPage.RingSelectionCanvas;
-            //    SmallColor = Color.Yellow.ToSKColor();
-            //      Debug.WriteLine("Entered UpdateRing for " + box.SmallColor.ToString());
-        }
-        #endregion
-/*
-        // For Visiblity an Alpha value of 0 is fully transparnt, and an alpha value of 0xFF is fully opaque.  
-        public void RingSelection()
-        {
-
-        }
-*/
-
     }
 }

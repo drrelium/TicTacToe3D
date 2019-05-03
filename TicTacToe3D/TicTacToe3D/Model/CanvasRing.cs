@@ -7,7 +7,7 @@ using SkiaSharp.Views.Forms;
 
 namespace TicTacToe3D
 {
-    class CanvasRings
+    class CanvasRing
     {
         public SKColor SmallColor { get; set; }
         public SKColor MediumColor { get; set; }
