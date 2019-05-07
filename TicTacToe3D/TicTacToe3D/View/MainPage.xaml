@@ -16,10 +16,10 @@
         <Grid BackgroundColor="Black">
 
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <FlexLayout x:Name="flexBoard"
+            <FlexLayout x:Name="FlexBoard"
                         Wrap="Wrap"
                         JustifyContent="SpaceEvenly" 
                         VerticalOptions="Start"
@@ -27,17 +27,31 @@
                         BindableLayout.ItemsSource="{Binding CanvasList}">
                 <BindableLayout.ItemTemplate>
                     <DataTemplate>
-                        <StackLayout>
-                            <skia:SKCanvasView x:Name="BoxCanvas" 
-                                
-                                EnableTouchEvents="True" 
-                                Touch="OnTouch"
+                        <Grid BackgroundColor="Black" ColumnSpacing="0" RowSpacing="0">
+                            <Button x:Name="DisplayBox"
                                 BackgroundColor="White"
-                                HeightRequest="{Binding Width, Source={x:Reference BoxCanvas}}" 
+                                Margin="5,5,5,5"
                                 WidthRequest="75"
-                                Margin="5,5,5,5">
+                                Clicked="ButtonClicked"
+                                HeightRequest="{Binding Width, Source={x:Reference DisplayBox}}" 
+                                Command="{Binding Path=BindingContext.DisplaySelectionCommand, Source={x:Reference Name=FlexBoard}}"
+                                CommandParameter="{Binding .}">
+                            </Button>
+
+                            <skia:SKCanvasView x:Name="RingSelectionCanvas"
+                                               
+                                WidthRequest="75"
+                                Margin="5,5,5,5"
+                                HeightRequest="{Binding Width, Source={x:Reference RingSelectionCanvas}}">
+
+                                <skia:SKCanvasView.Behaviors>
+                                    <b:PaintSurfaceCommandBehavior Command="{Binding Path=BindingContext.PaintCommand, Source={x:Reference Name=MessagesListView}}"/>
+                                </skia:SKCanvasView.Behaviors>
+
                             </skia:SKCanvasView>
-                        </StackLayout>
+
+                        </Grid>
+
                     </DataTemplate>
                 </BindableLayout.ItemTemplate>
             </FlexLayout>
@@ -70,6 +84,7 @@
                             </Button>
 
                             <skia:SKCanvasView x:Name="RingSelectionCanvas"
+                                               
                                 WidthRequest="75"
                                 Margin="5,5,5,5"
                                 HeightRequest="{Binding Width, Source={x:Reference RingSelectionCanvas}}">
