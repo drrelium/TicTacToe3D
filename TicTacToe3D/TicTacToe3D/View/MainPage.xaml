@@ -3,16 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:skia="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms"
              xmlns:local="clr-namespace:TicTacToe3D"
-             xmlns:b="clr-namespace:TicTacToe3D.ViewModel"
-
+             xmlns:b="clr-namespace:TicTacToe3D.ViewModels"
              x:Class="TicTacToe3D.MainPage">
-
-
+    
     <StackLayout x:Name="Panel"
         Spacing="0">
         
-
-
         <Grid BackgroundColor="Black">
 
             <Grid.RowDefinitions>
@@ -28,26 +24,26 @@
                 <BindableLayout.ItemTemplate>
                     <DataTemplate>
                         <Grid BackgroundColor="Black" ColumnSpacing="0" RowSpacing="0">
+
                             <Button x:Name="DisplayBox"
                                 BackgroundColor="White"
                                 Margin="5,5,5,5"
                                 WidthRequest="75"
-                                Clicked="ButtonClicked"
-                                HeightRequest="{Binding Width, Source={x:Reference DisplayBox}}" 
-                                Command="{Binding Path=BindingContext.DisplaySelectionCommand, Source={x:Reference Name=FlexBoard}}"
+                                HeightRequest="{Binding Width, Source={x:Reference DisplayBox}}"
+                                Command="{Binding Path=BindingContext.DisplaySelectionCommand, 
+                                    Source={x:Reference Name=FlexBoard}}"
                                 CommandParameter="{Binding .}">
                             </Button>
 
-                            <skia:SKCanvasView x:Name="RingSelectionCanvas"
-                                               
+                            <Label x:Name="LocationLabel" Text="{Binding Location}" TextColor="Red"/>
+
+                            <skia:SKCanvasView x:Name="RingDisplayCanvas"
+                                PaintSurface="OnCanvasViewPaintSurface"
+                                Touch="TouchEvent"
+                                EnableTouchEvents="True"      
                                 WidthRequest="75"
                                 Margin="5,5,5,5"
-                                HeightRequest="{Binding Width, Source={x:Reference RingSelectionCanvas}}">
-
-                                <skia:SKCanvasView.Behaviors>
-                                    <b:PaintSurfaceCommandBehavior Command="{Binding Path=BindingContext.PaintCommand, Source={x:Reference Name=MessagesListView}}"/>
-                                </skia:SKCanvasView.Behaviors>
-
+                                HeightRequest="{Binding Width, Source={x:Reference RingDisplayCanvas}}">
                             </skia:SKCanvasView>
 
                         </Grid>
@@ -77,9 +73,9 @@
                                 BackgroundColor="Green"
                                 Margin="5,5,5,5"
                                 WidthRequest="75"
-                                Clicked="ButtonClicked"
                                 HeightRequest="{Binding Width, Source={x:Reference RingSize}}" 
-                                Command="{Binding Path=BindingContext.RingSelectionCommand, Source={x:Reference Name=MessagesListView}}"
+                                Command="{Binding Path=BindingContext.RingSelectionCommand, 
+                                    Source={x:Reference Name=MessagesListView}}"
                                 CommandParameter="{Binding .}">
                             </Button>
 
@@ -89,9 +85,6 @@
                                 Margin="5,5,5,5"
                                 HeightRequest="{Binding Width, Source={x:Reference RingSelectionCanvas}}">
                                 
-                                <skia:SKCanvasView.Behaviors>
-                                    <b:PaintSurfaceCommandBehavior Command="{Binding Path=BindingContext.PaintCommand, Source={x:Reference Name=MessagesListView}}"/>
-                                </skia:SKCanvasView.Behaviors> 
                          
                             </skia:SKCanvasView>
 

@@ -8,7 +8,7 @@ using SkiaSharp.Views.Forms;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
-namespace TicTacToe3D.ViewModel
+namespace TicTacToe3D.ViewModels
 {
     public class PaintSurfaceCommandBehavior : Behavior<SKCanvasView>
     {

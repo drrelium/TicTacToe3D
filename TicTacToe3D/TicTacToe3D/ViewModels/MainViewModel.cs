@@ -16,16 +16,19 @@ namespace TicTacToe3D
         public ICommand RingSelectionCommand{ set; get; }
         public ICommand DisplaySelectionCommand { set; get; }
         public ICommand PaintCommand { get; set; }
+  //      public ICommand TapCommand { get; set; }
+
         public ObservableCollection<CanvasRing> RingList { get; set; }
         public int BoardWidth = 3;
         public SKColor largeColor;
-        public int selectedRingSize;
+        public int SelectedRingSize;
+        public int ClickedLocation;
         public SKColor currentPlayerColor;
         public CanvasRing currentCanvasRing;
 
-        private ObservableCollection<CanvasRing> canvasList;
+        public ObservableCollection<CanvasRing> CanvasList { get; set; }
 
-        public ObservableCollection<CanvasRing> CanvasList
+/*        public ObservableCollection<CanvasRing> CanvasList
         {
             get { return canvasList; }
             set
@@ -37,10 +40,7 @@ namespace TicTacToe3D
                 }
             }
         }
-
-    
-
-
+*/
         public MainViewModel()
         {
             CanvasList = new ObservableCollection<CanvasRing>();
@@ -51,51 +51,65 @@ namespace TicTacToe3D
             RingSelectionCommand = new Command<object>(UpdateSelectedRing);
             DisplaySelectionCommand = new Command<object>(UpdateRing);
             PaintCommand = new Command<SKPaintSurfaceEventArgs>(OnPainting);
+    //        TapCommand = new Command<SKCanvasView>(OnTapped);
+
             currentPlayerColor = Color.Yellow.ToSKColor();
+        }
+/*
+        public void OnTapped(SKCanvasView view)
+        {
+            Debug.WriteLine("Repaint");
+            view.InvalidateSurface();
+        }
+*/
+
+        public void NewRingSize(int size)
+        {
+            SelectedRingSize = size;
         }
 
         public void UpdateSelectedRing(object o)
         {
             var item = (o as CanvasRing);
-            int selectedRingSize = item.Location;
-            //         Debug.WriteLine("Clicked location " + location.ToString());
+            NewRingSize(item.Location);
+            Debug.WriteLine("Clicked selectedRingSize " + SelectedRingSize);
         }
 
         public void UpdateRing(object o)
         {
+            Debug.WriteLine("Entering UpdateRing");
+
             var currentCanvasRing = (o as CanvasRing);
-            int location = currentCanvasRing.Location;
-            //         Debug.WriteLine("Clicked location " + location.ToString());
-            
-            switch (selectedRingSize)
+            int ClickedLocation = currentCanvasRing.Location;
+
+            switch (SelectedRingSize)
             {
                 case 0:
                     currentCanvasRing.SmallColor = currentPlayerColor;
-                    return;
+                    break;
                 case 1:
                     currentCanvasRing.MediumColor = currentPlayerColor;
-                    return;
+                    break;
                 case 2:
+                   Debug.WriteLine("Changing LargeColor.");
+                    CanvasList[ClickedLocation].LargeColor = currentPlayerColor;
                     currentCanvasRing.LargeColor = currentPlayerColor;
-                    return;
+                    break;
                 default:
                     Debug.WriteLine("Error: A ring size needs to be selected");
-                    return;
+                    break;
             }
+                    Debug.WriteLine("selectedRingSize= " + SelectedRingSize + ", currentCanvasRing= " + currentCanvasRing.LargeColor.ToString());
         }
 
 
         private void OnPainting(SKPaintSurfaceEventArgs e)
         {
-            Debug.WriteLine("LargeColor is " + this.ToString());           
+            Debug.WriteLine("LargeColor is " + LargeColor.ToString());           
        //     Debug.WriteLine("location= " + location);
             SKImageInfo info = e.Info;
             SKSurface surface = e.Surface;
             SKCanvas canvas = surface.Canvas;
- //               this.LargeColor = LargeColor;
-
-        
-
 
             SKPaint LargeRing = new SKPaint
             {
@@ -117,7 +131,7 @@ namespace TicTacToe3D
                 {
                     SmallColor = Color.Transparent.ToSKColor(),
                     MediumColor = Color.Transparent.ToSKColor(),
-                    LargeColor = Color.Blue.ToSKColor(),
+                    LargeColor = Color.Transparent.ToSKColor(),
                     Location = x
                 });
 
@@ -131,19 +145,27 @@ namespace TicTacToe3D
                 get
                 {
                 if (currentCanvasRing == null)
+                {
+                    Debug.WriteLine("Default LargeColor property.");
                     return Color.Transparent.ToSKColor();
+                }
                 else
+                {
+                    Debug.WriteLine("Entered LargeColor property.");
                     return currentCanvasRing.LargeColor;
+                }
                 }
                 set
                 {
                     if (currentCanvasRing.LargeColor != value)
                         currentCanvasRing.LargeColor = value;
-                    Debug.WriteLine("LargeColor= " + LargeColor);
+                    Debug.WriteLine("LargeColor property= " + LargeColor.ToString());
                     OnPropertyChanged("LargeColor");
+                    
                 }
 
         }
         #endregion
+
     }
 }
