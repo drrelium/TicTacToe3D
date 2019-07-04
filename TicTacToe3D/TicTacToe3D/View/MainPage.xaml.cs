@@ -29,6 +29,8 @@ namespace TicTacToe3D
             ringCount = main.BoardWidth;
             PlayerAmount.SelectedIndexChanged += OnPickerSelectedIndexChanged;
             currentColor = Color.Transparent.ToSKColor();
+            FlexBoard.IsEnabled = false;
+            MessagesListView.IsEnabled = false;
         }
 
         public void OnCanvasViewPaintSurface(object sender, SKPaintSurfaceEventArgs args)
@@ -38,36 +40,36 @@ namespace TicTacToe3D
             SKImageInfo info = args.Info;
             SKSurface surface = args.Surface;
             SKCanvas canvas = surface.Canvas;
-
-
+            int numberOfRings = main.BoardWidth;
+            int spaceDivders = 4;
+            int strokeWidth = info.Width / (numberOfRings * spaceDivders);
+            int ringSize = -1;
 
             Ring = new SKPaint
             {
                 Style = SKPaintStyle.Stroke,
                 Color = currentColor,
-                StrokeWidth = (float)(info.Width * 0.10)
+                StrokeWidth = (float)(strokeWidth)
             };
-
-            float LargeRingSize = (float)(info.Width * 0.80);
-            float MediumRingSize = (float)(info.Width * 0.45);
-            float SmallRingSize = (float)(info.Width * 0.10);
 
             switch (main.SelectedRingSize)
             {
                 case 0:
-                    canvas.DrawCircle(info.Width / 2, info.Height / 2, SmallRingSize / 2, Ring);
+                    ringSize = 0;
                     break;
                 case 1:
-                    canvas.DrawCircle(info.Width / 2, info.Height / 2, MediumRingSize / 2, Ring);
+                    ringSize = 1;
                     break;
                 case 2:
-                    //              Debug.WriteLine("Changing LargeColor.");
-                    canvas.DrawCircle(info.Width / 2, info.Height / 2, LargeRingSize / 2, Ring);
+                    ringSize = 2;
                     break;
                 default:
                     Debug.WriteLine("Error: A ring size needs to be selected");
                     break;
             }
+
+            float RingRadius = (float)(strokeWidth + (2 * (ringSize * strokeWidth)));
+            canvas.DrawCircle(info.Width / 2, info.Height / 2, RingRadius, Ring);
         }
 
         private void TouchEvent(object sender, SKTouchEventArgs args)
@@ -89,7 +91,6 @@ namespace TicTacToe3D
             int spaceDivders = 4;
             int strokeWidth = info.Width / (numberOfRings * spaceDivders);
 
-
             Ring = new SKPaint
             {
                 Style = SKPaintStyle.Stroke,
@@ -100,13 +101,13 @@ namespace TicTacToe3D
             if (ringCount >= main.BoardWidth - 1)
             {
                 ringCount = 0;
+                //RingCounter.Text = main.PlayerList[currentPlayer].RemainingSmallRings;
             }
             else
             {
                 ringCount++;
             }
-
-            //        Debug.WriteLine("ringCount= " + ringCount);
+            
             float RingRadius = (float)(strokeWidth + (2 * (ringCount * strokeWidth)));
             canvas.DrawCircle(info.Width / 2, info.Height / 2, RingRadius, Ring);
         }
@@ -120,22 +121,20 @@ namespace TicTacToe3D
             }
             o.BackgroundColor = Color.Red;
             SelectedButton = o;
-
-            //     RingSelectionCanvas.InvalidateSurface();
+            FlexBoard.IsEnabled = true;
+            Prompt.Text = "Please select a location on the board.";
         }
 
         void OnPickerSelectedIndexChanged(object sender, EventArgs e)
         {
+            MessagesListView.IsEnabled = true;
             var picker = (Picker)sender;
             int numberOfOpponents = (picker.SelectedIndex) + 1;
             main.CreaterPlayers(numberOfOpponents);
             Debug.WriteLine("numberOfOpponents= " + numberOfOpponents);
-
-
             picker.IsVisible = false;
-
             Prompt.IsVisible = true;
-            Prompt.Text = "Number of opponents is " + numberOfOpponents;
+            Prompt.Text = "Please select a ring size.";
 
         }
     }

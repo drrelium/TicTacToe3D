@@ -66,7 +66,7 @@
                         BindableLayout.ItemsSource="{Binding RingList}">
                 <BindableLayout.ItemTemplate>
                     <DataTemplate>
-                        <Grid BackgroundColor="Aqua" ColumnSpacing="0" RowSpacing="0">
+                        <Grid BackgroundColor="{Binding PlayerColor}" ColumnSpacing="0" RowSpacing="0">
                             <Button x:Name="RingSize"
                                 Clicked="ButtonClicked"
                                 BackgroundColor="Green"
@@ -78,12 +78,15 @@
                                 CommandParameter="{Binding .}">
                             </Button>
 
+                            
                             <skia:SKCanvasView x:Name="RingSelectionCanvas"
                                 PaintSurface="OnRingCanvasViewPaintSurface"              
                                 WidthRequest="75"
                                 Margin="5,5,5,5"
                                 HeightRequest="{Binding Width, Source={x:Reference RingSelectionCanvas}}">
                             </skia:SKCanvasView>
+
+                            <Label x:Name="LocationLabel" Text="{Binding RemainingRings}" TextColor="Red"/>
 
                         </Grid>
                     </DataTemplate>

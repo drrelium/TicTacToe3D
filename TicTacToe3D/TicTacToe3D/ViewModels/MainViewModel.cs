@@ -13,12 +13,11 @@ namespace TicTacToe3D
     class MainViewModel : BaseViewModel
     {
 
-        public ICommand RingSelectionCommand{ set; get; }
+        public ICommand RingSelectionCommand { set; get; }
         public ICommand DisplaySelectionCommand { set; get; }
         public ICommand PaintCommand { get; set; }
-  //      public ICommand TapCommand { get; set; }
 
-        public ObservableCollection<CanvasRing> RingList { get; set; }
+        public ObservableCollection<RingSelection> RingList { get; set; }
         public ObservableCollection<Player> PlayerList { get; set; }
         public int BoardWidth = 3;
         public SKColor largeColor;
@@ -34,16 +33,17 @@ namespace TicTacToe3D
         public MainViewModel()
         {
             CanvasList = new ObservableCollection<CanvasRing>();
-            RingList = new ObservableCollection<CanvasRing>();
+            RingList = new ObservableCollection<RingSelection>();
 
             NewList(CanvasList, BoardWidth * BoardWidth);
-            NewList(RingList, BoardWidth);
+     //       NewList(RingList, BoardWidth);
 
             RingSelectionCommand = new Command<object>(UpdateSelectedRing);
             DisplaySelectionCommand = new Command<object>(UpdateRing);
-     //       PaintCommand = new Command<SKPaintSurfaceEventArgs>(OnPainting);
+            //       PaintCommand = new Command<SKPaintSurfaceEventArgs>(OnPainting);
             currentPlayerColor = Color.Yellow.ToSKColor();
-    //        MaximumPlayerCount = 4;
+            //        MaximumPlayerCount = 4;
+            CreateRingSelectionList();
 
         }
 
@@ -54,8 +54,8 @@ namespace TicTacToe3D
 
         public void UpdateSelectedRing(object o)
         {
-            var item = (o as CanvasRing);
-            NewRingSize(item.Location);
+            var item = (o as RingSelection);
+            NewRingSize(item.Index);
             Debug.WriteLine("Clicked selectedRingSize " + SelectedRingSize);
         }
 
@@ -88,28 +88,28 @@ namespace TicTacToe3D
       */
         }
 
-/*
-        private void OnPainting(SKPaintSurfaceEventArgs e)
-        {
-            Debug.WriteLine("LargeColor is " + LargeColor.ToString());           
-       //     Debug.WriteLine("location= " + location);
-            SKImageInfo info = e.Info;
-            SKSurface surface = e.Surface;
-            SKCanvas canvas = surface.Canvas;
+        /*
+                private void OnPainting(SKPaintSurfaceEventArgs e)
+                {
+                    Debug.WriteLine("LargeColor is " + LargeColor.ToString());           
+               //     Debug.WriteLine("location= " + location);
+                    SKImageInfo info = e.Info;
+                    SKSurface surface = e.Surface;
+                    SKCanvas canvas = surface.Canvas;
 
-            SKPaint LargeRing = new SKPaint
-            {
-                Style = SKPaintStyle.Stroke,
-                Color = LargeColor,
-                StrokeWidth = (float)(info.Width * 0.10)
-            };
+                    SKPaint LargeRing = new SKPaint
+                    {
+                        Style = SKPaintStyle.Stroke,
+                        Color = LargeColor,
+                        StrokeWidth = (float)(info.Width * 0.10)
+                    };
 
-            float LargeRingSize = (float)(info.Width * 0.80);
+                    float LargeRingSize = (float)(info.Width * 0.80);
 
-            canvas.DrawCircle(info.Width / 2, info.Height / 2, LargeRingSize / 2, LargeRing);
-        }
-        */
-        public void NewList(ObservableCollection<CanvasRing> list, int size) 
+                    canvas.DrawCircle(info.Width / 2, info.Height / 2, LargeRingSize / 2, LargeRing);
+                }
+                */
+        public void NewList(ObservableCollection<CanvasRing> list, int size)
         {
             for (int x = 0; x < size; x++)
             {
@@ -128,8 +128,8 @@ namespace TicTacToe3D
         {
             int maximumNumberOfRings = BoardWidth;
             PlayerList = new ObservableCollection<Player>();
-          
-            for (int x = 0; x < count + 1 ; x++)
+
+            for (int x = 0; x < count + 1; x++)
             {
                 PlayerList.Add(new Player
                 {
@@ -162,6 +162,21 @@ namespace TicTacToe3D
                         break;
 
                 }
+            }
+        }
+
+        public void CreateRingSelectionList()
+        {
+            int maximumNumberOfRings = BoardWidth;
+            RingList = new ObservableCollection<RingSelection>();
+
+            for (int x = 0; x < maximumNumberOfRings; x++)
+            {
+                RingList.Add(new RingSelection
+                {
+                    Index = x,
+                    RemainingRings = maximumNumberOfRings
+                });
             }
         }
     }
